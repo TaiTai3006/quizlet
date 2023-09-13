@@ -13,8 +13,9 @@ import HeaderHome from "../component/HeaderHome";
 import { useState, useRef } from "react";
 import TermCard from "../component/TermCard";
 import FolderCard from "../component/FolderCard";
+import TermScreen from "./TermScreen";
 const { width: screenWidth } = Dimensions.get("window");
-const HomeScreen = () => {
+const HomeScreen =  ({ navigation }) => {
   const [isHeaderVisible, setHeaderVisible] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const handleScroll = (event) => {
@@ -44,6 +45,10 @@ const HomeScreen = () => {
   const handleScrollNext = ()=>{
 setCurrentPage((currentPage)=> currentPage + 1)
   }
+  const handleTermCardPress = () => {
+    // Sử dụng navigation để điều hướng đến TermScreen
+    navigation.navigate('Term');
+  };
   return (
     <View style={{ flex: 1, backgroundColor: "#0A092B" }}>
       <View style={styles.header_container}>
@@ -61,10 +66,10 @@ setCurrentPage((currentPage)=> currentPage + 1)
         </View>
         <FlatList
           data={[...Array(20)]}
-          renderItem={({ item }) => <TermCard />}
+          renderItem={({ item }) => <TermCard onPress={handleTermCardPress} />}
           pagingEnabled={true}
           onScroll={handleScrollNext}
-          keyExtractor={(item) => item}
+          keyExtractor={(item, index) => index.toString()}
           horizontal={true} 
         />
         <View style={[styles.term_title, { marginTop: 30 }]}>

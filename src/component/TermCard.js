@@ -10,10 +10,10 @@ import { Avatar } from 'react-native-paper';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Chip } from "react-native-paper";
 const windowWidth = Dimensions.get("window").width;
-const TermCard = () => {
+const TermCard = ({ onPress }) => {
   return (
     <View>
-      <TouchableOpacity style={styles.card}>
+      <TouchableOpacity onPress={onPress} style={styles.card}>
           <View>
             <Text style={styles.text}>Tai Tai ne</Text>
             <View style={[styles.chip_container]}>
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     borderColor: "#4B526C",
     borderWidth: 2,
-    borderRadius: "20",
+    borderRadius: 20,
     flexDirection:'column',
     justifyContent:'space-between',
     padding: 15
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   chip_border: {
     backgroundColor: "#303855",
-    borderRadius: "30",
+    borderRadius: 30,
   },
 });
 
