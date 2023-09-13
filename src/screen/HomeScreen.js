@@ -1,21 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {
   View,
   Text,
-  SafeAreaView,
-  StatusBar,
   ScrollView,
   StyleSheet,
+  Dimensions,
+  FlatList,
 } from "react-native";
-import HeaderHome from "../component/HeaderHome";
-import { TextInput } from "@react-native-material/core";
-import { useState } from "react";
+import HeaderHome from "../component/HeaderHome"; 
+
+import { useState, useRef } from "react";
 import TermCard from "../component/TermCard";
-
+import FolderCard from "../component/FolderCard";
+const { width: screenWidth } = Dimensions.get("window");
 const HomeScreen = () => {
-
   const [isHeaderVisible, setHeaderVisible] = useState(true);
-
+  const [currentPage, setCurrentPage] = useState(0);
   const handleScroll = (event) => {
     const yOffset = event.nativeEvent.contentOffset.y;
     if (yOffset > 100) {
@@ -24,6 +25,25 @@ const HomeScreen = () => {
       setHeaderVisible(true);
     }
   };
+  // console.log(currentPage)
+  // useEffect(()=>{
+  //   const xOffset = currentPage * (screenWidth * 0.4);
+  //     scrollViewRef.current.scrollTo({ x: xOffset, animated: true });
+  // },[currentPage])
+  // const handleScrollNext = (event) => {
+  //   const xOffset = event.nativeEvent.contentOffset.x;
+  //   const newPage = Math.round(xOffset / screenWidth);
+
+  //   // if (newPage !== currentPage) {
+  //   //   setCurrentPage(newPage);
+  //   // }
+  //   scrollViewRef.current.scrollTo({ x: 2 * (screenWidth), animated: true });
+  // }
+  // const scrollViewRef = useRef(null);
+  const flatListRef = useRef(null);
+  const handleScrollNext = ()=>{
+setCurrentPage((currentPage)=> currentPage + 1)
+  }
   return (
     <View style={{ flex: 1, backgroundColor: "#0A092B" }}>
       <View style={styles.header_container}>
@@ -33,12 +53,33 @@ const HomeScreen = () => {
         style={styles.body_container}
         onScroll={handleScroll}
         scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
       >
-        <View style={styles.term}>
+        <View style={styles.term_title}>
           <Text style={styles.text}>Term</Text>
           <Text style={[styles.text, { color: "#B0B4F3" }]}>See all</Text>
         </View>
-       { [...Array(20)].map(()=><TermCard/>)}
+        <FlatList
+          data={[...Array(20)]}
+          renderItem={({ item }) => <TermCard />}
+          pagingEnabled={true}
+          onScroll={handleScrollNext}
+          keyExtractor={(item) => item}
+          horizontal={true} 
+        />
+        <View style={[styles.term_title, { marginTop: 30 }]}>
+          <Text style={styles.text}>Folder</Text>
+          <Text style={[styles.text, { color: "#B0B4F3" }]}>See all</Text>
+        </View>
+        <ScrollView
+          horizontal={true}
+          style={styles.term_cards}
+          showsHorizontalScrollIndicator={false}
+        >
+          {[...Array(20)].map(() => (
+            <FolderCard />
+          ))}
+        </ScrollView>
       </ScrollView>
     </View>
   );
@@ -55,17 +96,20 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 1000,
   },
-  body_container: {
-    marginLeft: 20,
-    marginRight: 20,
-  },
+  body_container: {},
   text: {
     color: "#fff",
     fontSize: 15,
-    fontWeight: "bold",
+    fontWeight: "800",
   },
-  term: {
+  term_title: {
     justifyContent: "space-between",
+    flexDirection: "row",
+    marginRight: 20,
+    marginLeft: 20,
+    marginBottom: 10,
+  },
+  term_cards: {
     flexDirection: "row",
   },
 });
